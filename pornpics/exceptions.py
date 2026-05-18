@@ -1,8 +1,8 @@
-class EromeError(Exception):
+class PornPicsError(Exception):
     pass
 
-class NotFound(EromeError):
+class NotFound(PornPicsError):
     pass
 
-class ParseError(EromeError):
+class ParseError(PornPicsError):
     pass

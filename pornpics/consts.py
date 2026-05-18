@@ -1,1 +1,5 @@
 BASE_URL = "https://www.pornpics.com"
+GALLERIES_PATH = "/galleries/"
+CHANNELS_PATH = "/channels/"
+PORNSTARS_PATH = "/pornstars/"
+TAGS_PATH = "/tags/"

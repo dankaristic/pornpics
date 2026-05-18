@@ -1,17 +1,23 @@
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 
-class ModelItem(BaseModel):
+class PornstarItem(BaseModel):
     name: str
     slug: str
 
-class ChannelItem(ModelItem):
+class GalleryModel(BaseModel):
+    gid: int
+    slug: str
+    thumbnail: str
+    title: str
+
+class ChannelItem(PornstarItem):
     pass
 
-class CategoryItem(ModelItem):
+class CategoryItem(PornstarItem):
     pass
 
-class TagItem(ModelItem):
+class TagItem(PornstarItem):
     pass
 
 class GalleryImage(BaseModel):
@@ -19,14 +25,21 @@ class GalleryImage(BaseModel):
     image: str
 
 
-class GalleryItem(BaseModel):
+class GalleryResponse(BaseModel):
     gallery_id: str
     slug: str
     title: str
     images: List[GalleryImage]
-    models: Optional[List[ModelItem]]
+    models: Optional[List[PornstarItem]]
     channels: Optional[List[ChannelItem]]
     tags: Optional[List[TagItem]]
     categories: Optional[List[CategoryItem]]
     rating: Optional[str] = None
     views: Optional[str] = None
+
+class CategoryResponse(BaseModel):
+    slug: Optional[str]
+    title: Optional[str]
+    tags: Optional[List[TagItem]]
+    categories: Optional[List[CategoryItem]]
+    galleries: List[GalleryModel]
