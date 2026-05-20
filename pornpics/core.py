@@ -1,7 +1,8 @@
 # core.py
 from .exceptions import NotFound
 from .consts import BASE_URL
-from .parsers import parse_gallery_item, parse_category_item
+from .parsers import parse_gallery_item, parse_category_item, parse_home_page
+
 
 class _PornPicsCore:
     """Core synchronous client for interacting with the PornPics API.
@@ -63,6 +64,17 @@ class _PornPicsCore:
         html = self._get_html(url)
         return parse_category_item(html, offset)
 
+    def get_home(self):
+        """Fetches and parses the homepage. It returns tags and categories listed on the homepage
+
+        Returns:
+            List[HomeMedia]: A list of `HomeMedia` objects representing the featured tags and categories.
+                       Each object contains the link, type (tag/category), name, and thumbnail.
+        """
+        url = f"{BASE_URL}/"
+        html = self._get_html(url)
+        return parse_home_page(html)
+
 class _PornPicsCoreAsync:
     """Core asynchronous client for interacting with the PornPics API.
 
@@ -122,3 +134,14 @@ class _PornPicsCoreAsync:
         url = f"{BASE_URL}/{slug}/?offset={offset}&limit={limit}"
         html = await self._get_html(url)
         return parse_category_item(html, offset)
+
+    async def get_home(self):
+        """Asynchronously fetches and parses the homepage. It returns tags and categories listed on the homepage
+
+        Returns:
+            List[HomeMedia]: A list of `HomeMedia` objects representing the featured tags and categories.
+                       Each object contains the link, type (tag/category), name, and thumbnail.
+        """
+        url = f"{BASE_URL}/"
+        html = await self._get_html(url)
+        return parse_home_page(html)

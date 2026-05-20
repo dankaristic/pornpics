@@ -5,7 +5,7 @@ from typing import List, Optional
 from bs4 import BeautifulSoup
 from .models import (
     GalleryResponse, GalleryImage, CategoryItem, TagItem,
-    ChannelItem, PornstarItem, GalleryModel, CategoryResponse
+    ChannelItem, PornstarItem, GalleryModel, CategoryResponse, HomeMedia
 )
 from .consts import *
 
@@ -144,3 +144,36 @@ def parse_category_item(html: str, offset: int = 0) -> CategoryResponse:
         categories=categories,
         galleries=combo
     )
+
+def parse_home_page(html: str) -> List[HomeMedia]:
+    """Parses the home page HTML to extract featured media (tags and categories).
+
+    Args:
+        html (str): The HTML content of the home page.
+
+    Returns:
+        List[HomeMedia]: A list of `HomeMedia` objects representing the featured tags and categories.
+                       Each object contains the link, type (tag/category), name, and thumbnail.
+    """
+    soup = _soup(html)
+    images = soup.find('ul', id="tiles")
+    combo = []
+
+    if images:
+        for image in images.find_all('li', class_='thumbwook'):
+            try:
+                a_tag = image.find('a')
+                link = a_tag.get('href') if a_tag else ""
+                media_type = "tag" if link.startswith("/tags/") else "category"
+                name = image.find('span', class_='h2').get_text(strip=True)
+                thumbnail = image.find('img').get('data-src')
+                combo.append(HomeMedia(
+                    link=link,
+                    type=media_type,
+                    name=name,
+                    thumbnail=thumbnail
+                ))
+            except AttributeError:
+                continue
+
+    return combo

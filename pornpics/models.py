@@ -24,6 +24,12 @@ class GalleryImage(BaseModel):
     thumbnail: str
     image: str
 
+class HomeMedia(BaseModel):
+    link: str
+    type: str
+    name: str
+    thumbnail: str
+
 
 class GalleryResponse(BaseModel):
     gallery_id: str
