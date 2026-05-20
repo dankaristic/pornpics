@@ -177,3 +177,20 @@ def parse_home_page(html: str) -> List[HomeMedia]:
                 continue
 
     return combo
+
+def parse_search_page(html: str, offset: int = 0) -> List[GalleryModel]:
+    combo = []
+    try:
+        soup = json.loads(html)
+        items = soup if isinstance(soup, list) else soup.get("items", [])
+        for item in items:
+            gallery_url = item.get("g_url", "")
+            gid = item.get("gid")
+            slug = gallery_url.split(GALLERIES_PATH)[-1].strip("/") if gallery_url else ""
+            title = item.get("desc", "") or item.get("title", "")
+            thumbnail = item.get("t_url", "") or item.get("thumb", "")
+            combo.append(GalleryModel(gid=gid, slug=slug, thumbnail=thumbnail, title=title))
+    except (json.JSONDecodeError, AttributeError):
+        pass
+
+    return combo

@@ -1,7 +1,9 @@
 # core.py
+import urllib.parse
+
 from .exceptions import NotFound
 from .consts import BASE_URL
-from .parsers import parse_gallery_item, parse_category_item, parse_home_page
+from .parsers import parse_gallery_item, parse_category_item, parse_home_page, parse_search_page
 
 
 class _PornPicsCore:
@@ -75,6 +77,12 @@ class _PornPicsCore:
         html = self._get_html(url)
         return parse_home_page(html)
 
+    def search(self, query: str,lang: str = "en", offset: int=0, limit: int = 0):
+        encoded_query = urllib.parse.quote_plus(query)
+        url = f"{BASE_URL}/search/srch.php?q={encoded_query}&lang={lang}&limit={limit}&offset={offset}"
+        html = self._get_html(url)
+        return parse_search_page(html)
+
 class _PornPicsCoreAsync:
     """Core asynchronous client for interacting with the PornPics API.
 
@@ -145,3 +153,9 @@ class _PornPicsCoreAsync:
         url = f"{BASE_URL}/"
         html = await self._get_html(url)
         return parse_home_page(html)
+
+    async def search(self, query: str,lang: str = "en", offset: int=0, limit: int = 0):
+        encoded_query = urllib.parse.quote_plus(query)
+        url = f"{BASE_URL}/search/srch.php?q={encoded_query}&lang={lang}&limit={limit}&offset={offset}"
+        html = await self._get_html(url)
+        return parse_search_page(html)
